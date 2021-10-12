@@ -1,0 +1,14 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: archive a folder
+      archive:
+        path: /tmp/Hello
+        dest: /tmp/Hello.zip      
+      tags: archive_folder_zip
+
+    - name: list  archieve registered to var
+      ansible.builtin.command: ls -lrt /tmp/Hello.zip
+      register: folder_archive_zip_stats    
+    - debug: var=folder_archive_zip_stats.stdout_lines       

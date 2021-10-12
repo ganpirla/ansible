@@ -1,0 +1,16 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: addind  users mentioning comments
+      user:
+        name: "{{ item.key }}"
+        comment: "{{ item.value.full_name }}"
+      with_dict:
+        Ganga:
+          full_name: Gangadhara Pirla
+        Pirla:
+          full_name: Rao Pirla
+        Anish:
+          full_name: Anish Yadav
+      tags: new_user_add   

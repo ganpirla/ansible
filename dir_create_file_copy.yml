@@ -1,0 +1,12 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: Creatinf a directory under temp dir
+      file:
+        path: /tmp/Hello
+        state: directory  
+    - name: Copy a file under tmp directory
+      copy:
+        src: /etc/hosts
+        dest: /tmp/Hello/  

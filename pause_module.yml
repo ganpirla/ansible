@@ -1,0 +1,32 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: Install a nginx  package 
+      package: 
+        name: nginx
+        state: present
+      notify: restart nginx  
+      tags: nginx 
+
+    - name: Pause for 30sec for next task
+      pause:
+        seconds: 30      
+
+    - name: Installing ssh package
+      package:
+        name: ssh
+        state: latest
+      notify: restart ssh  
+      tags: ssh
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+    - name: restart ssh
+      service:
+        name: ssh
+        state: restarted

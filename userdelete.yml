@@ -1,0 +1,16 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: Deleting user accounts
+      user: 
+        name: "{{ item }}"
+        state: absent
+      with_items:
+        - Ram
+        - Sam
+        - Jam
+        - Bom
+        - Dam
+        - Zoom
+      tags: user_delete    

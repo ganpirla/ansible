@@ -1,0 +1,17 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: To Capture  the file stats
+      ansible.builtin.stat:
+        path: "/tmp/hosts"
+      register: file_stats
+      changed_when: false
+      delegate_to: server1
+      run_once: yes 
+      tags: file_stat
+
+    - name: To display the file stats in asnible output
+      debug:
+        var: file_stats
+      tags: file_stats_display  

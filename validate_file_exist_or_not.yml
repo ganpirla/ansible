@@ -1,0 +1,9 @@
+---
+-
+  hosts: all
+  tasks:
+
+    - name: validate file exist or not
+      ansible.builtin.command: ls -lrt /tmp/hosts
+      register: file_list_stats    
+    - debug: var=file_list_stats.stdout_lines  

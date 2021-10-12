@@ -1,0 +1,10 @@
+---
+-
+  hosts: all
+  tasks:
+    - name : Restarting nginx daemon
+      service:
+        name: nginx
+        state: restarted
+      run_once: true  
+

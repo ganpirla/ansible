@@ -1,0 +1,9 @@
+---
+-
+  hosts: all
+  tasks:
+
+    - name: Copy a file under tmp directory
+      copy:
+        src: /etc/hosts
+        dest: /tmp/ 

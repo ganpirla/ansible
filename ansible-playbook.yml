@@ -1,0 +1,217 @@
+---
+- name: Installing ssh package
+  package:
+    name: "{{ ssh_package }}"
+    state: latest
+  notify:
+    - restart ssh
+
+- name: adding new users
+  user:
+    name: "{{ single_user_list }}"
+
+- name: Copy a file under tmp directory
+  copy:
+    src: "{{ copy_source }}"
+    dest: "{{ copy_destination }}"
+
+- name : Restarting ssh daemon
+  service:
+    name: ssh
+    state: restarted
+  run_once: true
+
+- name: Creatinf a directory under temp dir
+  file:
+    path: "{{ create_source }}"
+    state: directory
+
+- name: Creating a file name wow under temp dir
+  file:
+    src: "{{ copy_source }}"
+    dest: "{{ link_destination }}"
+    state: link
+
+- name: Pause Module use case
+  pause:
+    seconds: 1
+
+- name: Running a Linux command in shell
+  shell: |
+    "df"
+  register: dfcommand
+
+- name: Displaying the df command output
+  debug:
+    msg: "{{ dfcommand.stdout }}"
+
+- name: Installing nginx package
+  package:
+    name: "{{ nginx_package }}"
+    state: present
+  notify: restart nginx
+
+- meta: flush_handlers
+
+- name: setfact
+  set_fact:
+    our_fact: Ansible Rocks.
+    ansible_distribution: "{{ ansible_distribution }}"
+
+- name: shows custom fact
+  debug:
+    msg: "{{ our_fact }}"
+
+- name: shows default facts
+  debug:
+    msg: "{{ ansible_distribution }}"
+
+- name: Fetch os release file
+  fetch:
+    src: "{{ fetch_source }}"
+    dest: "{{ copy_destination }}"
+
+- name: dfdevice  command output
+  command: lsblk
+  register: device
+
+- name: to capture device command output
+  debug:
+    var: device
+
+- name: Displaying the df command output
+  debug:
+    var: dfcommand
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "20"
+
+- name: Displaying the df command output
+  debug:
+    var: dfcommand
+  when: ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "19" ) or
+        ( ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "20" )
+  register: df_ubuntu
+
+- name: Install a net tools package
+  package:
+    name: "{{ net_package }}"
+    state: present
+  tags: nettool
+
+- name: Creating user accounts
+  user:
+    name: "{{ item }}"
+  with_items: "{{ multiple_user_list }}"
+  tags: user_add
+
+- name: Deleting user accounts
+  user:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ multiple_user_list }}"
+  tags: user_delete
+
+- name: addind  users mentioning comments
+  user:
+    name: "{{ item.key }}"
+    comment: "{{ item.value.full_name }}"
+  with_dict:
+    Ganga:
+      full_name: Gangadhara Pirla
+    Pirla:
+      full_name: Rao Pirla
+    Anish:
+      full_name: Anish Yadav
+  tags: new_user_add
+
+- name: Deleting  users mentioning comments
+  user:
+    name: "{{ item.key }}"
+    comment: "{{ item.value.full_name }}"
+    state: absent
+  with_dict:
+    Ganga:
+      full_name: Gangadhara Pirla
+    Pirla:
+      full_name: Rao Pirla
+    Anish:
+      full_name: Anish Yadav
+  tags: new_user_delete
+
+- name: Command delegation to other server
+  command:
+    "ifconfig -a"
+  delegate_to: server1
+  register: delegate_server1
+  tags: delegate_1
+
+- name: to display delate server1 output
+  debug:
+    var: delegate_server1
+  tags: delegate_2
+
+- name: restart ssh service on delegate server2
+  service:
+    name: ssh
+    state: restarted
+  delegate_to: server1
+  run_once: true
+  tags: delegate_3
+
+- name: To Capture  the file stats
+  ansible.builtin.stat:
+    path: "/tmp/resolv.conf"
+  register: file_stats
+  changed_when: false
+  delegate_to: server1
+  run_once: yes
+  tags: file_stat
+
+- name: To display the file stats in asnible output
+  debug:
+    var: file_stats
+  tags: file_stats_display
+
+- name: validation file exist or nor.If not exist playbook will fail. please fix the issue and rerun the playbook
+  fail:
+    msg: file  not available.Please check the reason for why file not available
+  when: file_stats.stat.exists != True
+  delegate_to: server1
+  run_once: true
+  tags: file_validation
+
+- name: archive a folder
+  archive:
+    path: /tmp/Hello
+    dest: /tmp/Hello.zip
+  register: folder_archive_zip_stats
+  tags: archive_folder_zip
+
+- name: archive a folder
+  archive:
+    path: "{{ archive_folder }}"
+    dest: /tmp/Hello.tar
+    format: tar
+  register: folder_archive_tar_stats
+  tags: archive_folder_tar
+
+- name: archive file stats
+  debug:
+    var: folder_archive_zip
+  tags: archive_stats_zip
+
+- name: Unarchive a folder
+  unarchive:
+    src: "{{ unarchive_folder }}"
+    dest: /tmp/Test
+    remote_src: yes
+  tags: unarchive_folder
+
+- name: User Delete
+  user:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - svc-devops
+  tags: user_delete
+
+...

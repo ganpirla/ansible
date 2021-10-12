@@ -1,0 +1,16 @@
+---
+-
+  hosts: all
+  tasks:
+  
+    - name: "Validate if a String or line is present in the file and if it exists replace it"
+      tags: example1
+      lineinfile:
+        path: /tmp/Hello/resolv.conf
+        # The String to Search whether it is exist or not
+        regexp: "search localdomain" 
+       # The String to Replace  irrespective of string exist or not
+        line: "search localdomain"
+        state: present
+        backup: yes
+      register: example1out 

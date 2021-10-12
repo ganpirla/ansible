@@ -1,0 +1,15 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: Creating user accounts
+      user: 
+        name: "{{ item }}"
+      with_items:
+        - Ram
+        - Sam
+        - Jam
+        - Bom
+        - Dam
+        - Zoom
+      tags: user_add    

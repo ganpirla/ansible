@@ -1,0 +1,23 @@
+all:
+  children:
+    ubuntu:
+      children:
+        dblist:
+          hosts:
+            server1:
+            server2:
+        applist:
+          hosts:
+            server3:
+            server4:
+            server5:
+        webapp:
+           hosts:
+             server6:
+             server7:
+             server8:
+        Utility:
+           hosts:
+             server9:
+             server10:
+             

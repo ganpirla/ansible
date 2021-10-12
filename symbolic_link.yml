@@ -1,0 +1,9 @@
+---
+-
+  hosts: all
+  tasks:
+    - name: Creating a new file in different dir as symbolic link with existing file
+      file:
+        src: /tmp/hosts
+        dest: /root/abc.txt
+        state: link  
